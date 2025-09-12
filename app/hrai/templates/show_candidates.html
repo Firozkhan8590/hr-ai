@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Review Candidates - HR AI Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #1a252f, #101820);
+      color: #e0e0e0;
+    }
+
+    header {
+      background: rgba(45, 62, 80, 0.7);
+      padding: 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(12px);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .controls input, .controls select {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .status {
+      font-weight: 600;
+    }
+
+    .selected {
+      color: #4caf50; /* green */
+    }
+
+    .review {
+      color: #ffc107; /* yellow */
+    }
+
+    .rejected {
+      color: #f44336; /* red */
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+      transition: background 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <header>Review Candidates</header>
+
+  <div class="container">
+    <h2>Candidate List</h2>
+
+    <!-- Search + Filter -->
+    <div class="controls">
+      <input type="text" id="searchBox" placeholder="🔍 Search candidate...">
+      <select id="statusFilter">
+        <option value="all">All</option>
+        <option value="selected">Selected</option>
+        <option value="shortlisted">Shortlisted</option>
+        <option value="under_review">Under Review</option>
+        <option value="rejected">Rejected</option>
+        <option value="interview">Interview Scheduled</option>
+        <option value="hired">Hired</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <table id="candidatesTable">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Role Applied</th>
+        <th>Match Score</th>
+        <th>Status</th>
+      </tr>
+      </thead>
+      <tbody>
+      {% for cand in candidates %}
+      <tr data-status="{{ cand.status }}">
+        <td>{{ cand.name }}</td>
+        <td>{{ cand.summary }}</td>
+        <td>{{ cand.score }}%</td>
+        <td class="status
+          {% if cand.status == 'selected' %}selected
+          {% elif cand.status == 'rejected' %}rejected
+          {% else %}review
+          {% endif %}">
+          {% if cand.status == 'selected' %}✅ Selected
+          {% elif cand.status == 'rejected' %}❌ Rejected
+          {% elif cand.status == 'shortlisted' %}⏳ Shortlisted
+          {% elif cand.status == 'under_review' %}⏳ Under Review
+          {% elif cand.status == 'interview' %}📅 Interview Scheduled
+          {% elif cand.status == 'hired' %}🎉 Hired
+          {% else %}⏳ Pending
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align:center; color:#bbb;">No candidates found</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- JS for search & filter -->
+  <script>
+    const searchBox = document.getElementById('searchBox');
+    const statusFilter = document.getElementById('statusFilter');
+    const tableRows = document.querySelectorAll('#candidatesTable tbody tr');
+
+    function filterTable() {
+      const searchQuery = searchBox.value.toLowerCase();
+      const selectedStatus = statusFilter.value;
+
+      tableRows.forEach(row => {
+        const name = row.cells[0].textContent.toLowerCase();
+        const status = row.dataset.status;
+
+        const matchesSearch = name.includes(searchQuery);
+        const matchesStatus = selectedStatus === 'all' || status === selectedStatus;
+
+        row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+      });
+    }
+
+    searchBox.addEventListener('input', filterTable);
+    statusFilter.addEventListener('change', filterTable);
+  </script>
+</body>
+</html>

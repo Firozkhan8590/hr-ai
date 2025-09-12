@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scheduled Interviews - HR Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+      height: 100%;
+      background: #101820;
+      color: #e0e0e0;
+      position: relative;
+    }
+
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    header {
+      background: rgba(45, 62, 80, 0.7);
+      padding: 20px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #fff;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(12px);
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 24px;
+      color: #fff;
+    }
+
+    input#searchBox {
+      padding: 10px;
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 600;
+      color: #fff;
+    }
+
+    td {
+      font-size: 14px;
+    }
+
+    .status {
+      font-weight: 600;
+      color: #3498db; /* blue for scheduled interview */
+    }
+
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+      transition: background 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+  <header>Scheduled Interviews - HR Dashboard</header>
+
+  <div class="container">
+    <h2>Interview List</h2>
+
+    <input type="text" id="searchBox" placeholder="🔍 Search candidate...">
+
+    <table id="candidateTable">
+      <tr>
+        <th>Name</th>
+        <th>Role / Summary</th>
+        <th>Status</th>
+      </tr>
+
+      {% for cand in interviews %}
+      <tr>
+        <td>{{ cand.name }}</td>
+        <td>{{ cand.summary }}</td>
+        <td class="status">⏳ Scheduled</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="3" style="text-align:center; color:#bbb;">No interviews scheduled</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS("particles-js", {
+      "particles": {
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#ffffff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3 },
+        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 3 }
+      },
+      "interactivity": {
+        "detect_on": "canvas",
+        "events": {
+          "onhover": { "enable": true, "mode": "grab" },
+          "onclick": { "enable": true, "mode": "push" }
+        },
+        "modes": {
+          "grab": { "distance": 140, "line_linked": { "opacity": 1 } },
+          "push": { "particles_nb": 4 }
+        }
+      },
+      "retina_detect": true
+    });
+
+    // Simple search filter
+    const searchBox = document.getElementById('searchBox');
+    const table = document.getElementById('candidateTable');
+    const rows = table.getElementsByTagName('tr');
+
+    searchBox.addEventListener('input', function() {
+      const searchText = this.value.toLowerCase();
+      for (let i = 1; i < rows.length; i++) {
+        const nameCell = rows[i].cells[0].textContent.toLowerCase();
+        rows[i].style.display = nameCell.includes(searchText) ? '' : 'none';
+      }
+    });
+  </script>
+</body>
+</html>

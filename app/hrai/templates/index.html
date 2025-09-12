@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HR AI Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      color: #e0e0e0;
+      overflow: hidden;
+    }
+
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1a252f 0%, #101820 100%);
+      z-index: -1;
+    }
+
+    /* Layout */
+    .dashboard {
+      display: flex;
+      height: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: rgba(20, 30, 40, 0.7);
+      backdrop-filter: blur(12px);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar h2 {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #fff;
+      text-align: center;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      padding: 12px 15px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background: linear-gradient(45deg, #4c669f, #2d3e50);
+      transform: translateX(5px);
+    }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .topbar h1 {
+      font-size: 28px;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .user {
+      font-size: 16px;
+      color: #b0b0b0;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #fff;
+    }
+
+    .card p {
+      font-size: 14px;
+      color: #d0d0d0;
+    }
+  </style>
+</head>
+<body>
+  <div id="particles-js"></div>
+
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div>
+        <h2>HR AI</h2>
+        <div class="nav-links">
+          <a href="{% url 'post_jd' %}">Upload Job Description</a>
+          <a href="{% url 'show_candidates' %}">Review Candidates</a>
+          <a href="{% url 'show_interviews' %}">Schedule Interviews</a>
+          
+        </div>
+      </div>
+      <div class="user">
+        Logged in as: Admin
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="main">
+      <div class="topbar">
+        <h1>Dashboard Overview</h1>
+        <div class="user">👤 HR Manager</div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Active Job Posts</h3>
+          <p>{{ total_jobs}} job descriptions currently uploaded.</p>
+        </div>
+        <div class="card">
+          <h3>Pending Reviews</h3>
+          <p>{{pending_reviews}} candidates awaiting review.</p>
+        </div>
+        <div class="card">
+          <h3>Scheduled Interviews</h3>
+          <p>{{scheduled_interviews}} interviews scheduled this week.</p>
+        </div>
+        
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- Particles -->
+  <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+  <script>
+    particlesJS('particles-js', {
+      "particles": {
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+        "color": { "value": "#6699ff" },
+        "shape": { "type": "circle" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3, "random": true },
+        "line_linked": { "enable": true, "distance": 150, "color": "#6699ff", "opacity": 0.4, "width": 1 },
+        "move": { "enable": true, "speed": 2 }
+      },
+      "interactivity": {
+        "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" } },
+        "modes": { "repulse": { "distance": 100, "duration": 0.4 } }
+      },
+      "retina_detect": true
+    });
+  </script>
+</body>
+</html>
